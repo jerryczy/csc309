@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA-CSStQZ-EtiP6urWuQUm2FlWoUTQPtGA&libraries=places"></script>
+    <script src="main.js"></script>
+        <title>UniLife</title>
+    <style>
+        .container-fluid .container {
+            padding-left:0;
+            padding-right:0;
+        }
+
+        @media (max-width: 767px){
+            .invis-label{
+                display:none;
+            }
+        }
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        /* Style the tab */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+            background-color: inherit;
+            float: center;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }   
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            -webkit-animation: fadeEffect 1s;
+            animation: fadeEffect 1s;
+        }
+        /* Fade in tabs */
+        @-webkit-keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        .quality {
+    		width: 100%;
+		}
+		.bar {
+			text-align: right;
+    		padding-right: 20px;
+    		line-height: 20px;
+    		color: white;
+    		border-radius: 10px;
+		}
+		.barName {
+			margin-top: .5em;
+			margin-bottom: 0;
+		}
+    </style>
+    </head>
+    <body style="background-color:#485667">
+        <!--Tab class-->
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Login')">Login</button>
+            <button class="tablinks" onclick="openTab(event, 'Search')">Search</button>
+            <button class="tablinks" onclick="openTab(event, 'About')">About</button>
+        </div>
+        <div id="Search" class="tabcontent">
+
+        <div class="container-fluid">
+        <div class="row">
+        <div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+        <div class="col-sm-1 hidden-xs" style="background-color:#ffffff"></div>
+
+        <div class="col-xs-12 col-sm-10 col-lg-8" style="background-color:#80ced6">
+                    
+            <!-- Title -->
+            <center>
+            <br>
+            <h1>UniLife</h1>
+            <br> 
+            </center>
+                    
+            <!-- Input -->
+            <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-md-9">
+                <div class="form-group">
+                    <label for="uni">Input a University Name:</label>
+                    <input type="text" class="form-control" id="uniName" placeholder="Ex: University of Toronto">
+                    <script>
+                    var input = document.getElementById("uniName");
+                    input.addEventListener("keyup", function(event) {
+                        event.preventDefault();
+                        if (event.keyCode === 13) {
+                            document.getElementById("uniSubmit").click();
+                        }
+                    });
+                    </script>
+                </div>
+                </div>
+                <div class="col-xs-12 col-md-3">
+                <!-- This empty label vertically aligns the button. When the window is greater than md, remove the label -->
+                <label class="invis-label">&nbsp;</label>
+                <button type="submit" class="btn btn-primary btn-block" id="uniSubmit">Submit</button>
+                </div>
+            </div>
+            </div>
+                
+        </div>
+        <div class="col-sm-1 hidden-xs" style="background-color:#ffffff"></div>
+        <div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+        </div>
+				<div class="row" id="uniRow" style="display:none">
+						<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+
+						<div class="col-xs-12 col-lg-10" style="background-color:#80ced6">
+								<center>
+										<h4 id="uniHeader">See Favourite Universities</h4>
+								</center>
+								<div id="savedUnis" style="display:none">
+								</div>
+						</div>
+						<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+				</div>
+				<div class="row">
+						<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+						<div class="col-xs-12 col-lg-10" style="background-color:#80ced6" id="basicAdd">
+								<div class="row">
+						
+										<div class="col-xs-12 col-lg-2" style="background-color:#80ced6" id="basicBar">
+												<button type="submit" class="btn btn-secondary btn-block" id="addFav" style="display:none">Add Favourite</button>
+										</div>
+										<div class="col-xs-12 col-lg-8" style="background-color:#80ced6" id="basicAddress">
+                
+										</div>
+
+										<div class="col-lg-2 hidden-md-down" style="background-color:#80ced6"></div>
+
+
+								</div>
+						</div>
+                        
+						<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+				</div>
+				<div class="row">
+						<div class="col-lg-2 hidden-md-down" style="background-color:#485667">
+								
+						</div>
+						<div class="col-xs-8 col-lg-8" style="background-color:#ffffff" id="map">
+								<script> 
+								map = new google.maps.Map(document.getElementById('map'), {
+										center: {lat: 43.6628917, lng: -79.3956564}, // default: University of Toronto
+										zoom: 15
+								});
+								</script>
+						</div>
+						<div class="col-lg-2 hidden-md-down" style="background-color:#485667" id="info"></div>
+				</div>
+				<div class="row" id="infoRow" style="display:none">
+						<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+						<div class="hidden-sm-down col-lg-3" style="background-color:#ffffff" id="restaurants">
+            
+						</div>
+						<div class="hidden-sm-down col-lg-4" style="background-color:#80ced6">
+								<h4 id="qualityheader" style="display:none">City's Quality of Living out of 10</h4>
+								<div class="quality" id="qualityBar">
+									
+								</div>
+								<ul id="quality">
+								</ul>
+						</div>
+						<div class="hidden-sm-down col-lg-3" style="background-color:#ffffff" id="libraries">
+
+						</div>
+						<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+				</div>
+				</div>
+        </div>
+        <!--Log in page-->
+        <div id="Login" class="tabcontent" style="background-color:#485667">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+                    <div class="col-sm-1 hidden-xs" style="background-color:#ffffff"></div>
+                    <div class="col-xs-12 col-sm-10 col-lg-8" style="background-color:#80ced6">
+						<center>
+						<div class="container-fluid">
+							<div class="row">
+								<div class="col-xs-12 col-lg-12">
+									<br>
+									<h1>Login</h1>
+								</div>
+								<div class="col-xs-12 col-lg-12">
+									<div class="form-group">
+										<label for="user">Username:</label>
+										<input type="text" class="form-control" id="userName" placeholder="Enter Your Username Here">
+										<label for="pass">Password:</label>
+										<input type="password" class="form-control" id="password" placeholder="Enter Your Password Here">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<button type="submit" class="btn btn-primary btn-block" id="login">Log in</button>
+							</div>
+							<div class="row">
+								<br>
+								<p id="loginMessage"></p>
+							</div>
+							<div class="row">
+								<button type="submit" class="btn btn-danger btn-block" id="logout">Log out</button>
+							</div>
+							<div class="row">
+								<div class="col-4">
+									<br><hr>
+								</div>
+								<div class="col-4"> 
+									<br><center><h3>or</h3></center>
+								</div>
+								<div class="col-4">
+									<br><hr>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-lg-12">
+									<h1>Sign Up</h1>
+								</div>
+								<div class="col-xs-12 col-lg-12">
+									<div class="form-group">
+										<label for="user">Username:</label>
+										<input type="text" class="form-control" id="signName" placeholder="Enter Your Username Here">
+										<label for="pass">Password:</label>
+										<input type="password" class="form-control" id="signPassword" placeholder="Enter Your Password Here">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<button type="submit" class="btn btn-primary btn-block" id="signup">Sign Up</button>
+							</div>
+							<div class="row">
+								<br>
+								<p id="signMessage"></p>
+							</div>
+						</div>
+						</center>
+					</div>
+					<div class="col-sm-1 hidden-xs" style="background-color:#ffffff"></div>
+					<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+				</div>
+			</div>
+		</div>
+		<!--About page-->
+		<div id = "About" class="tabcontent" style="background-color:#485667">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+					<div class="col-sm-1 hidden-xs" style="background-color:#ffffff"></div>
+					<div class="col-xs-12 col-sm-10 col-lg-8" style="background-color:#80ced6"><br>
+						<center> <h1>About</h1>
+							<h4> Zhiyuan Cheng, Richard Zhan, Tae Hoon Jun, Weitong Luo</h4></center>
+							<hr>
+							<p style="font-size: 1.25em">
+								Unilife details the quality of living in Universities in the U.S. and Canada. These details include location, crime rates, transportation, restaurants, libraries, living expenses, and many others. Users can research these details and create profiles that store which universities they are interested in.</p>
+							<hr>
+							<p style="font-size: 1.25em">
+								Our target users are prospective university students. University is typically atleast a 4 year investment, and it's important to consider what environment you would be staying in.</p>
+							<hr>
+							<h3>Currently Support Assets</h3>
+        					<ul>
+        						<li>address</li>
+        						<li>top ten rated restaurants with in 1km</li>
+        						<li>top ten rated libraries with in 500m</li>
+        						<li>all rating are based on Google Map user rating</li>
+								<li>crime rates per 100,000 (U.S.A. supported only)</li>
+								<li>quality of living scores by Teleport</li>
+								<li>user accounts (encrypted but not HTTPS)</li>
+								<li>can save and delete universities for future reference</li>
+        					</ul>
+							<h3>To Do List</h3>
+								<li>Other data proposed like student communities</li>
+								<li>Implement HTTPS</li>
+					</div>
+					<div class="col-sm-1 hidden-xs" style="background-color:#ffffff"></div>
+					<div class="col-lg-1 hidden-md-down" style="background-color:#485667"></div>
+				</div>
+			</div>
+		</div>
+    </body>
+</html>
