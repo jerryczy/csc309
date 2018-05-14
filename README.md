@@ -7,4 +7,8 @@ Our target users are prospective university students. University is typically at
 Zhiyuan Cheng  https://github.com/jerryczy  
 Richard Zhan  https://github.com/RzhanRichardZhan  
 Tae Hoon Jun  https://github.com/taehoon719  
-Weitong Luo  https://github.com/WeitongL
+Weitong Luo  https://github.com/WeitongL  
+
+---
+A forked version with all contributions can be found here:  
+https://github.com/WeitongL/CSC309-web-design
